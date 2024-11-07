@@ -101,3 +101,20 @@ svg.icon {
 svg.icon > path {
   fill: white;
 }
+table {
+  padding: 0.5em;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 1em;
+}
+td {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5em;
+}
+th {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1em;
+}
+div.content img {
+  object-fit: contain;
+  max-width: 100%;
+}
