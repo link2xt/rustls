@@ -26,6 +26,9 @@ jobs:
       - name: Install rust toolchain
         uses: dtolnay/rust-toolchain@nightly
 
+      - name: Install pulldown-cmark
+        run: cargo install --locked pulldown-cmark
+
       - name: Generate version information
         run: |
           echo >tag.html \
@@ -39,6 +42,11 @@ jobs:
         run: cargo doc --locked --features read_buf,ring --no-deps --package rustls
         env:
           RUSTDOCFLAGS: -Dwarnings --cfg=docsrs --html-after-content tag.html
+
+      - name: Generate other pages
+        run: |
+          make -C website
+          cp -rv website/* ./target/doc/
 
       - name: Restore lychee cache
         uses: actions/cache@v4
@@ -62,7 +70,7 @@ jobs:
           # lockfile causes deployment step to go wrong, due to permissions
           rm -f target/doc/.lock
           # make resulting url be more sensible
-          mv target/doc/rustls target/doc/prerelease
+          mv target/doc/rustls target/doc/docs
 
       - name: Package and upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -76,7 +84,7 @@ jobs:
     needs: generate
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}prerelease/
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
